@@ -1041,8 +1041,10 @@ class BaseConnection(object):
             self.write_channel(self.normalize_cmd(cmd))
             try:
                 output += self.read_until_prompt_or_pattern(pattern=pattern, re_flags=re_flags)
-                self.write_channel(self.normalize_cmd(self.secret))
-                output += self.read_until_prompt()
+                """No enable or enable secret password"""
+                if re.search(pattern, output):
+                  self.write_channel(self.normalize_cmd(self.secret))
+                  output += self.read_until_prompt()
             except NetMikoTimeoutException:
                 raise ValueError(msg)
             if not self.check_enable_mode():
